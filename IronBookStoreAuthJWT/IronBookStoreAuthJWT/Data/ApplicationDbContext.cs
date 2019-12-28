@@ -18,10 +18,16 @@ namespace IronBookStoreAuthJWT.Data
         }
 
         public DbSet<Book> Books { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new BookConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+
 
             //TODO: Implementing audit with shadow properties
             foreach (var entityType in modelBuilder.Model.GetEntityTypes()

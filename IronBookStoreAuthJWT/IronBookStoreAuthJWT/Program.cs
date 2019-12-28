@@ -24,7 +24,8 @@ namespace IronBookStoreAuthJWT
 
         private static void RunSeeding(IHost host)
         {
-            //TODO: Create scope & ask for db service directly to the Provider because we can inject ApplicationDbContext by constructor here.
+            //TODO: Create scope & ask for db service directly to the Provider because we can inject ApplicationDbContext 
+            //by constructor here.
             using (var scope = host.Services.CreateScope())
             {
                 try

@@ -40,9 +40,30 @@ namespace IronBookStoreAuthJWT.Data.Repositories
             return await _context.Books.FirstOrDefaultAsync(b => b.BookId == bookId);
         }
 
+        public async Task<bool> IsBookOwner(Guid bookId, Guid ownerId)
+        {
+            return await _context.Books
+                .AnyAsync(b => b.BookId == bookId &&
+                               EF.Property<string>(b, "CreatedBy") == ownerId.ToString()); //TODO: Consult a shadow property
+        }
+
         public async Task<IEnumerable<Book>> GetBooks()
         {
             return await _context.Books.ToListAsync();
+        }
+
+        public async Task<User> GetUserByEmail(string email, bool includeRoles = false)
+        {
+            if (includeRoles)
+            {
+                return await _context.Users
+                    .Include(u => u.UserRoles)
+                    .ThenInclude(r => r.Role)
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            }
+
+            return await _context.Users
+                   .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
         }
 
         public async Task<bool> SaveAsync()

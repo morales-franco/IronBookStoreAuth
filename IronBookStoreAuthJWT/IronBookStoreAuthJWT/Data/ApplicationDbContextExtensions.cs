@@ -32,6 +32,46 @@ namespace IronBookStoreAuthJWT.Data
                 await context.SaveChangesAsync();
             }
 
+            if (!context.Users.Any())
+            {
+                var roles = new List<Role>
+                {
+                    new Role()
+                    {
+                        RoleId = new Guid("6c63a444-9555-48de-9cc5-249da962cf75"),
+                        Name = "Administrator",
+                    },
+                    new Role()
+                    {
+                        RoleId = new Guid("67b896ea-f184-4118-a46e-52977cc70017"),
+                        Name = "GeneralManager",
+                    },
+                    new Role()
+                    {
+                        RoleId = new Guid("0c5d2046-5b2f-428c-8fb3-ca9052378c36"),
+                        Name = "SecurityManager",
+                    }
+                };
+
+                var user = new User()
+                {
+                    UserId = new Guid("62cc6a6f-c01d-48db-b77b-3c3ad3c7b25b"),
+                    Email = "admin@fmoralesdev.com",
+                    Password = "Dfo0NCB4P6Lxfs8MPwFNzYThlMxSEd/uw0cd7ZrH1z4=", //123456
+                };
+
+                user.UserRoles.Add(new UserRole()
+                {
+                    UserId = new Guid("62cc6a6f-c01d-48db-b77b-3c3ad3c7b25b"),
+                    RoleId = new Guid("6c63a444-9555-48de-9cc5-249da962cf75")
+                });
+
+                await context.Roles.AddRangeAsync(roles);
+                await context.Users.AddAsync(user);
+               
+                await context.SaveChangesAsync();
+            }
+
         }
     }
 }

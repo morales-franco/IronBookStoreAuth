@@ -15,5 +15,7 @@ namespace IronBookStoreAuthJWT.Core.Services
         Task<bool> SaveAsync();
         Task<bool> BookExists(Guid bookId);
         Task UpdateBook(Book book);
+        Task<bool> IsBookOwner(Guid bookId, Guid ownerId);
+        Task<User> GetUserByEmail(string email, bool includeRoles = false);
     }
 }

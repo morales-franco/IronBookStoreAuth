@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using IronBookStoreAuthJWT.Core.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IronBookStoreAuthJWT.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] //TODO: Apply Authorization - User must be login
     public class BooksController : ControllerBase
     {
         private readonly IBookStoreRepository _repository;
@@ -22,7 +24,7 @@ namespace IronBookStoreAuthJWT.Controllers
             _mapper = mapper;
         }
 
-
+        [Authorize(Policy = "UserMustBeGeneralManagerOrUpper")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -31,6 +33,7 @@ namespace IronBookStoreAuthJWT.Controllers
             return Ok(books);
         }
 
+        [Authorize(Policy = "UserMustBeGeneralManagerOrUpper")]
         [HttpGet("{bookId}", Name = "GetBook")]
         public async Task<IActionResult> Get(Guid bookId)
         {
@@ -44,6 +47,7 @@ namespace IronBookStoreAuthJWT.Controllers
             return Ok(_mapper.Map<Core.Dtos.Book>(entity));
         }
 
+        [Authorize(Policy = "UserMustBeGeneralManagerOrUpper")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Core.Dtos.BookForCreation book)
         {
@@ -73,6 +77,7 @@ namespace IronBookStoreAuthJWT.Controllers
                 bookCreated);
         }
 
+        [Authorize(Policy = "UserMustBeGeneralManagerOrUpper")]
         [HttpPut("{bookId}")]
         public async Task<IActionResult> Update(Guid bookId,
             [FromBody]Core.Dtos.BookForUpdate book)
@@ -107,6 +112,7 @@ namespace IronBookStoreAuthJWT.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = "UserMustBeBookOwner")]
         [HttpDelete("{bookId}")]
         public async Task<IActionResult> Remove(Guid bookId)
         {
