@@ -1,4 +1,5 @@
 ﻿using IronBookStoreAuthJWT.Core.Entities;
+using IronBookStoreAuthJWT.Core.Services;
 using IronBookStoreAuthJWT.Data.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,11 +12,21 @@ namespace IronBookStoreAuthJWT.Data
 {
     public class ApplicationDbContext: DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
-            :base(options)
-        {
+        private IUserInfoService _userInfoService;
 
+        //public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        //    : base(options)
+        //{
+
+        //}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
+            IUserInfoService userInfoService)
+        : base(options)
+        {
+            // userInfoService is a required argument
+            _userInfoService = userInfoService ?? throw new ArgumentNullException(nameof(userInfoService));
         }
+
 
         public DbSet<Book> Books { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -50,7 +61,7 @@ namespace IronBookStoreAuthJWT.Data
             CancellationToken cancellationToken = default)
         {
             var timestamp = DateTime.UtcNow;
-            var userId = "c3b7f625-c07f-4d7d-9be1-ddff8ff93b4d";
+            var userId = _userInfoService.UserId.ToString();
 
             //TODO: get added or updated entries
             var addedOrUpdatedEntries = ChangeTracker.Entries()

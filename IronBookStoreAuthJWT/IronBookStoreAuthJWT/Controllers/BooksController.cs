@@ -112,6 +112,7 @@ namespace IronBookStoreAuthJWT.Controllers
             return NoContent();
         }
 
+
         [Authorize(Policy = "UserMustBeBookOwner")]
         [HttpDelete("{bookId}")]
         public async Task<IActionResult> Remove(Guid bookId)

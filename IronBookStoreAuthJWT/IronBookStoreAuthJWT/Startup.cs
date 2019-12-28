@@ -37,23 +37,20 @@ namespace IronBookStoreAuthJWT
         public void ConfigureServices(IServiceCollection services)
         {
             //TODO: Declare policies
-            services.AddAuthorization(options =>
+            services.AddAuthorization(authOptions =>
             {
-                options.AddPolicy("UserMustBeGeneralManagerOrUpper", policyBuilder =>
+                authOptions.AddPolicy("UserMustBeGeneralManagerOrUpper", policyBuilder =>
                 {
                     policyBuilder
-                    .RequireAuthenticatedUser()
                     .RequireRole("Administrator", "GeneralManager"); //User must be Administrator AND GeneralManager
                 });
 
-                options.AddPolicy(
+                authOptions.AddPolicy(
                    "UserMustBeBookOwner",
                    policyBuilder =>
                    {
                        policyBuilder
-                       .Combine(options.GetPolicy("UserMustBeGeneralManagerOrUpper"));
-
-                       policyBuilder
+                       .RequireRole("Administrator")
                        .AddRequirements(
                            new UserMustBeBookOwnerRequirement("Clean Code"));
                    });
@@ -96,6 +93,8 @@ namespace IronBookStoreAuthJWT
             services.AddScoped<ISecurityService, SecurityService>();
             services.AddSingleton<JwtSettingsConfiguration>(jwtSettings);
             services.AddScoped<IAuthorizationHandler, UserMustBeBookOwnerRequirementHandler>();
+            services.AddScoped<IUserInfoService, UserInfoService>();
+        
 
             //Enable access Http Context outside the controller
             services.AddHttpContextAccessor();
@@ -103,7 +102,7 @@ namespace IronBookStoreAuthJWT
             services.AddAutoMapper(typeof(Startup));
         }
 
-     
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
