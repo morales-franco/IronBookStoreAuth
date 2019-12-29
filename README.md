@@ -3,6 +3,10 @@ Research &amp; testing different Authentication/Authorization techniques with AS
 
 # Business - Iron Book Store
 
+We create a simple system to test different authentication/authorization techniques. 
+We want a system to retrieve books & users. Furthermore, a user should be able to register in the system (default roles: Administrator and GeneralManager) and the auth will be via Tokens.
+A user could have many roles.
+
 ### Books
 1. /api/books - GET - Authorize Roles: GeneralManager or Administrator
 1. /api/books/{bookId} - GET - Authorize Roles: GeneralManager or Administrator
@@ -14,12 +18,10 @@ Research &amp; testing different Authentication/Authorization techniques with AS
 1. api/auth/login - POST - Anonymous - Return JWT
 2. api/auth/register - POST - Anonymous - register new user with Roles: GeneralManager & Administrator
 
-##Users
+## Users
 1. api/users - GET - Authorize Roles: Administrator or SecurityManager - Return all users
 
-
-# Project: IronBookStoreAuthJWT
-## JSON WEB TOKENS - Net Core 3.0
+## Project: IronBookStoreAuthJWT - JSON WEB TOKENS - Net Core 3.0
 
 1. Api Project - ASP.NET CORE 3.0
 2. Using JWT for Authentication & Authorization | Without Identity
