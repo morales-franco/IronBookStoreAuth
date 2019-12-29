@@ -70,6 +70,17 @@ namespace IronBookStoreAuthJWT
                 {
                     cfg.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        /*
+                         * TODO: User.Identity.Name & JWT & JwtRegisteredClaimNames.Sub
+                         * With this line we map: JwtRegisteredClaimNames.Sub with System.Security.Claims.ClaimTypes.NameIdentifier
+                         * After that we can use: User.Identity.Name in the controller, otherwise User.Identity.Name = null.
+                         * Another alternative could be to use: new Claim(ClaimTypes.Name,, user.UserId.ToString()) when 
+                         * we define the claims when we generate the token in: IronBookStoreAuthJWT.Core.Services.SecurityService.
+                         * Another alternative User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value instead of
+                         * User.Identity.Name.
+                         */
+                        NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier,
+
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
                         ValidateIssuerSigningKey = true, //verify that the key used to sign the incoming token is part of a list of trusted keys
                         ValidateIssuer = true, //validate the server that created that token

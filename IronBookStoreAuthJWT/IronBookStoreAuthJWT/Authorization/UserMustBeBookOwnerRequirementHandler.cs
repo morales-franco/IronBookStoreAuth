@@ -21,16 +21,13 @@ namespace IronBookStoreAuthJWT.Authorization
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
             UserMustBeBookOwnerRequirement requirement)
         {
-            //TODO: We need to check if exists a auth user - By default Authorization Attributes are NOT executed FIRST:Alternative
-            //https://stackoverflow.com/questions/44187969/why-are-unauthenticated-requests-allowed-in-custom-policies
-            //Check exists an auth user - JWT Approach - We can't use context.User.Identity.Name
-            if (context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) == null)
+            if (!context.User.Identity.IsAuthenticated)
             {
                 context.Fail(); //Optional: Default: fail
                 return Task.CompletedTask; //NET Framework older than 4.6: use: return Task.FromResult(0);
             }
 
-            var userId = context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+            var userId = context.User.Identity.Name;
 
             if (_httpContext.HttpContext == null)
             {

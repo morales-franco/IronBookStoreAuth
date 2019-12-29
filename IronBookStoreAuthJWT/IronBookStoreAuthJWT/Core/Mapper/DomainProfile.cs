@@ -9,6 +9,9 @@ namespace IronBookStoreAuthJWT.Core.Mapper
             CreateMap<Entities.Book, Dtos.Book>();
             CreateMap<Dtos.BookForCreation, Entities.Book>();
             CreateMap<Dtos.BookForUpdate, Entities.Book>();
+
+            CreateMap<Dtos.RegisterUser, Entities.User>();
+            CreateMap<Entities.User, Dtos.User>();
         }
     }
 }

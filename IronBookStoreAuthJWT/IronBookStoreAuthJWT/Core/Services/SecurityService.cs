@@ -29,6 +29,34 @@ namespace IronBookStoreAuthJWT.Core.Services
             return GenerateToken(user);
         }
 
+        public async Task<bool> Register(User user, params string[] roles)
+        {
+            if (await _repository.GetUserByEmail(user.Email) != null)
+            {
+                return false;
+            }
+
+            foreach (var roleName in roles)
+            {
+                var roleAux = await _repository.GetRoleByName(roleName);
+
+                if (roleAux == null)
+                    continue;
+
+                user.UserRoles.Add(new UserRole()
+                {
+                    Role = roleAux
+                });
+            }
+
+            user.Password = HashHelper.Create(user.Password);
+
+            await _repository.AddUser(user);
+
+            return await _repository.SaveAsync();
+
+        }
+
         public async Task<bool> ValidateCredentials(string email, string password)
         {
             var user = await _repository.GetUserByEmail(email);
@@ -50,6 +78,7 @@ namespace IronBookStoreAuthJWT.Core.Services
 
             var claims = new List<Claim>
             {
+                //new Claim(ClaimTypes.Name, user.UserId.ToString()) do that if you want to do: User.Identity.Name - alternative: see startup.cs
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

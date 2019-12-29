@@ -77,6 +77,23 @@ namespace IronBookStoreAuthJWT.Data.Repositories
         {
             _context.Entry(book).State = EntityState.Modified;
         }
+
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
+        public async Task<Role> GetRoleByName(string roleName)
+        {
+            return await _context.Roles
+                .Where(r => r.Name.ToLower() == roleName.ToLower())
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task AddUser(User user)
+        {
+             await _context.Users.AddAsync(user);
+        }
 #pragma warning restore 1998
     }
 }
